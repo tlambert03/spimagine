@@ -3,7 +3,7 @@
 
 package:
   name: {{ name }}
-  version: {{ setupdata['version'] }}
+  version: {{ setupdata.get('version') }}
 
 source:
   git_tag: conda
@@ -14,7 +14,7 @@ build:
   string: 'py{{ PY_VER|replace(".", "") }}_{{ PKG_BUILDNUM }}'
   script: python setup.py install --single-version-externally-managed --record record.txt
   entry_points:
-    {% for key, list in setupdata['entry_points'].items() %}
+    {% for key, list in setupdata.get('entry_points').items() %}
       {% for item in list %}
     - {{item}}
       {% endfor %}
@@ -23,7 +23,7 @@ build:
 
 requirements:
   build:
-    - python
+    - python {{ python }}
     - setuptools
   run:
     - python {{ python }}
@@ -32,7 +32,7 @@ requirements:
     - scipy >=1.1.0
     - imageio >=2.3.0
     - pyqt >=5.9.2
-    - pyopengl >=3.1.1
+    - pyopengl
     - pyopengl-accelerate # [not linux]
     - sortedcontainers >=1.5.10
     - configparser # [py2k]
