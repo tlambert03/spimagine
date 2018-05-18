@@ -26,14 +26,15 @@ requirements:
     - python
     - setuptools
   run:
-    - python
-    - gputools
-    - scipy
-    - pillow >=3.3
-    - pyqt >=5
-    - pyopengl
+    - python {{ python }}
+    - numpy {{ numpy }}
+    - gputools >=0.2.6
+    - scipy >=1.1.0
+    - imageio >=2.3.0
+    - pyqt >=5.9.2
+    - pyopengl >=3.1.1
     - pyopengl-accelerate # [not linux]
-    - sortedcontainers
+    - sortedcontainers >=1.5.10
     - configparser # [py2k]
 
 test:
