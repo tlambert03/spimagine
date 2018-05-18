@@ -10,7 +10,6 @@ package:
   {% endif %}
 
 source:
-  git_tag: conda
   git_url: https://github.com/tlambert03/spimagine
   git_rev: "{{ environ.get('BRANCH') }}"
 
