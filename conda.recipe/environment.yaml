@@ -9,7 +9,7 @@ dependencies:
   - pyqt
   - numpy
   - scipy
-  - pillow
+  - imageio
   - pyopengl
   - pyopencl
   - sortedcontainers
