@@ -114,15 +114,13 @@ def test_rawdata():
     time.sleep(.1)
 
 
-
 def test_xwing():
 
-    d = XwingData("/Users/mweigert/Data/XwingTest")
-
-    print(d.size())
-
-    return d
-
+    file = "/Users/mweigert/Data/XwingTest"
+    if os.path.exists(file):
+        d = XwingData(file)
+        print(d.size())
+        return d
 
 
 if __name__ == '__main__':
