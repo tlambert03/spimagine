@@ -32,27 +32,28 @@ requirements:
     - setuptools
   run:
     - python {{ python }}
-    - numpy {{ numpy }}
-    - gputools >=0.2.6
-    - scipy >=1.1.0
-    - imageio >=2.3.0
-    - pyqt >=5.9.2
+    - numpy >=1.15.4
+    - gputools >=0.2.8
+    - scipy >=1.2.0
+    - imageio ==2.4.1
+    - pyqt ==5.9.2
     - pyopengl
-    - pyopengl-accelerate # [not linux]
-    - sortedcontainers >=1.5.10
+    - pyopengl-accelerate
+    - sortedcontainers ==2.1.0
     - configparser # [py2k]
+    - tifffile ==0.15.1
 
 test:
   imports:
     - spimagine
-  requires:
-    - nose
-    - matplotlib
-    - termcolor
-    - scikit-image
-  commands:
-    - nosetests -v tests
-#    - spimagine
+  # requires:
+  #   - nose
+  #   - matplotlib
+  #   - termcolor
+  #   - scikit-image
+  # commands:
+  #   - nosetests -v tests
+    - spimagine
 
 about:
   home: {{ setupdata.get('url') }}

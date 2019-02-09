@@ -16,3 +16,5 @@ dependencies:
   - nose  # for testing
   - matplotlib  # for testing
   - termcolor # for testing
+  - tifffile
+  
