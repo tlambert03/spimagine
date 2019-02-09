@@ -36,3 +36,5 @@ tests/test_config/config_example.txt
 
 
 /.DS_Store
+
+*.DS_Store
