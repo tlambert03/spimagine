@@ -30,7 +30,8 @@ setup(name='spimagine',
           "pyopencl",
           "gputools",
           "imageio",
-          "sortedcontainers"
+          "sortedcontainers",
+          "tifffile"
       ],
       extras_require={
           ':python_version<"3.0"': [
