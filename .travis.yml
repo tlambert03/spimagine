@@ -1,20 +1,20 @@
 os: osx
-osx_image: xcode6.4
 
 language: generic
-#python:
-#  - 3.6
-env:
-  - CONDA_PY=3.6
+python:
+  - 3.6
+  - 3.5
+  - 2.7
 
-# safelist
 branches:
   only:
-  - conda
+  - master
+  - develop
 
 before_install:
-  - brew update
-  - brew install python3
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew upgrade python; fi
+    - python --version
 #  - virtualenv env -p python3
 #  - source env/bin/activate
 
@@ -45,31 +45,50 @@ before_install:
 #  - echo ${LD_LIBRARY_PATH}
 
 install:
-  # Install Anaconda
-  # - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-  #     wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-  #   else
-  #     wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-  #   fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - if [[ "$BRANCH" == "master" ]]; then
+      export LABEL="main";
     else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+      export LABEL="dev";
+    fi
+
+#  - sudo apt-get update
+  # We do this conditionally because it saves us some downloading if the
+  # version is the same.
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
     fi
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - export USER=talley
   - export CONDA_BLD_PATH=~/conda-bld
+
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda install conda-build anaconda-client
-  - conda update -q conda conda-build
+  - conda update -q conda
   - conda config --add channels conda-forge
   - conda config --add channels talley
   - conda config --set show_channel_urls true
+  # Useful for debugging any issues with conda
   - conda info -a
 
 script:
   - OUTPUT="$(conda build --py $CONDA_PY --output conda.recipe)"
   - echo $OUTPUT
   - conda build --py $CONDA_PY  conda.recipe
+
+
+after_success:
+  - echo $TRAVIS_TEST_RESULT
+#  - anaconda -t $CONDA_UPLOAD_TOKEN -v upload --all -u $USER --force -s "Lattice Light Sheet Processing Tools" $OUTPUT
+  - conda convert -p osx-64 -o $CONDA_BLD_PATH $OUTPUT
+#  - ls $CONDA_BLD_PATH/*
+  - anaconda -v -t $CONDA_UPLOAD_TOKEN upload $CONDA_BLD_PATH/osx-64/*.tar.bz2 --user $USER --force --label $LABEL 
+  - anaconda -v -t $CONDA_UPLOAD_TOKEN upload $CONDA_BLD_PATH/linux-64/*.tar.bz2 --user $USER --force --label $LABEL 
+  - anaconda -v -t $CONDA_UPLOAD_TOKEN upload $CONDA_BLD_PATH/win-64/*.tar.bz2 --user $USER --force --label $LABEL 
+#  - test $TRAVIS_BRANCH = "master" && bash conda.recipe/conda_upload.sh
+
+
