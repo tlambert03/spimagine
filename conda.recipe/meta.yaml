@@ -37,7 +37,8 @@ requirements:
     - gputools >=0.2.8
     - scipy
     - imageio ==2.4.1
-    - pyqt ==5.9.2
+    - pyqt ==5.9.2 #[py3k]
+    - pyqt ==5.6.0 #[py2k]
     - pyopengl
     - pyopengl-accelerate
     - sortedcontainers ==2.1.0
